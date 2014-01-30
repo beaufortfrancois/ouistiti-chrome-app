@@ -1,7 +1,7 @@
 {
   "name": "Ouistiti!",
   "description": "Take a picture of you every day",
-  "version": "1",
+  "version": "1.1",
   "manifest_version": 2,
   "icons": {
     "16": "16.png",
