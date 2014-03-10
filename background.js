@@ -116,19 +116,19 @@ function promptUser() {
 /* Alarms */
 
 function onAlarm() {
-    var userHasCamera = false;
     MediaStreamTrack.getSources(function(sources) {
-        sources.forEach(function(source) {
-            if (source.kind === 'video')
+        var userHasCamera = false;
+        for (var i = 0; i < sources.length; i++) {
+            if (sources[i].kind === 'video')
                 userHasCamera = true;
+        }
+        // Don't prompt user if there's no camera.
+        if (!userHasCamera)
+            return;
+        chrome.syncFileSystem.requestFileSystem(function(syncFS) {
+            // prompt user only if the picture of the day doesn't exist
+            syncFS.root.getFile(getPictureName(), { create: false }, null, promptUser);
         });
-    });
-    // Don't prompt user if there's no camera.
-    if (!userHasCamera)
-        return;
-    chrome.syncFileSystem.requestFileSystem(function(syncFS) {
-        // prompt user only if the picture of the day doesn't exist
-        syncFS.root.getFile(getPictureName(), { create: false }, null, promptUser);
     });
 }
 
