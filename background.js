@@ -1,3 +1,6 @@
+var IMAGE_RATIO = 1.5; // 3:2
+
+
 function takePicture() {
     var beep = new Audio();
     beep.src = chrome.runtime.getURL('beep.mp3');
@@ -17,8 +20,8 @@ function takePicture() {
             video.addEventListener('canplay', function() {
 
                 var canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
+                canvas.width = Math.ceil(canvas.height * IMAGE_RATIO);
                 canvas.getContext('2d').drawImage(video, 0, 0);
 
                 stream.stop();
@@ -47,7 +50,7 @@ function takePicture() {
                     });
                 });
             });
-        });
+        }, function(error) { console.error(error) });
     });
 }
 
