@@ -19,36 +19,40 @@ function takePicture() {
             // Wait for when the browser can start playing video
             video.addEventListener('canplay', function() {
 
-                var canvas = document.createElement('canvas');
-                canvas.height = video.videoHeight;
-                canvas.width = Math.ceil(canvas.height * IMAGE_RATIO);
-                canvas.getContext('2d').drawImage(video, 0, 0);
+                // And wait a little bit more so that the camera stabilizes the image.
+                setTimeout(function() {
 
-                stream.stop();
+                    var canvas = document.createElement('canvas');
+                    canvas.height = video.videoHeight;
+                    canvas.width = Math.ceil(canvas.height * IMAGE_RATIO);
+                    canvas.getContext('2d').drawImage(video, 0, 0);
 
-                // Save picture on user's local file system
-                window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, function(localFS) {
-                    localFS.root.getFile(getPictureName(), { create: true }, function(fileEntry) {
+                    stream.stop();
 
-                        var dataURL = canvas.toDataURL('image/webp');
-                        write(fileEntry, dataURLtoBlob(dataURL), function() {
+                    // Save picture on user's local file system
+                    window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, function(localFS) {
+                        localFS.root.getFile(getPictureName(), { create: true }, function(fileEntry) {
 
-                            var webcamOptions = {
-                                type: 'image',
-                                title: 'Let me know what you think of it',
-                                message: 'Is it not wonderful?',
-                                iconUrl: chrome.runtime.getURL('128.png'),
-                                imageUrl: dataURL,
-                                buttons: [
-                                    { title: 'I love it!', iconUrl: chrome.runtime.getURL('heart_16.png') },
-                                    { title: 'Please take another one' }
-                                ]
-                            };
-                            // Show notification with user's picture
-                            chrome.notifications.create('webcam', webcamOptions, function() {});
+                            var dataURL = canvas.toDataURL('image/webp');
+                            write(fileEntry, dataURLtoBlob(dataURL), function() {
+
+                                var webcamOptions = {
+                                    type: 'image',
+                                    title: 'Let me know what you think of it',
+                                    message: 'Is it not wonderful?',
+                                    iconUrl: chrome.runtime.getURL('128.png'),
+                                    imageUrl: dataURL,
+                                    buttons: [
+                                        { title: 'I love it!', iconUrl: chrome.runtime.getURL('heart_16.png') },
+                                        { title: 'Please take another one' }
+                                    ]
+                                };
+                                // Show notification with user's picture
+                                chrome.notifications.create('webcam', webcamOptions, function() {});
+                            });
                         });
                     });
-                });
+                }, 500);
             });
         }, function(error) { console.error(error) });
     });
