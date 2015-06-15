@@ -13,6 +13,6 @@
     }
   },
   "permissions": [
-    "alarms", "notifications", "videoCapture", "syncFileSystem"
+    "alarms", "browser", "notifications", "videoCapture", "syncFileSystem"
   ]
 }

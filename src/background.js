@@ -63,7 +63,7 @@ chrome.notifications.onButtonClicked.addListener(function(id, index) {
     chrome.notifications.clear(id, function() {
         // Open Google Drive search if it's the last step
         if (id === 'uploaded') {
-            window.open('https://drive.google.com/#search/' + chrome.runtime.id); 
+            chrome.browser.openTab({url: 'https://drive.google.com/#search/' + chrome.runtime.id});
         } 
         // Take a picture if user wants to
         else if ((id === 'webcam' && index === 1) || (id === 'prompt' && index === 0)) {
