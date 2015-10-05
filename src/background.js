@@ -27,7 +27,9 @@ function takePicture() {
                     canvas.width = Math.ceil(canvas.height * IMAGE_RATIO);
                     canvas.getContext('2d').drawImage(video, 0, 0);
 
-                    stream.stop();
+                    // Stop stream
+                    var track = stream.getTracks()[0];
+                    track.stop();
 
                     // Save picture on user's local file system
                     window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024, function(localFS) {
